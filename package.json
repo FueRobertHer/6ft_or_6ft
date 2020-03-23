@@ -1,0 +1,20 @@
+{
+  "name": "6ft_or_6ft",
+  "version": "1.0.0",
+  "description": "Avoid people. Survive",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack -w --mode development"
+  },
+  "dependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.0",
+    "webpack-cli": "^3.3.9"
+  },
+  "author": "fue",
+  "license": "ISC"
+}
