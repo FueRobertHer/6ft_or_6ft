@@ -1,4 +1,4 @@
-export default class movingCicle {
+export default class MovingCicle {
   constructor(radius) {
 
   }

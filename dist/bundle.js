@@ -95,11 +95,11 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return game; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var game = function game(canvas) {
-  _classCallCheck(this, game);
+var Game = function Game(canvas) {
+  _classCallCheck(this, Game);
 
   this.canvas = canvas;
   this.ctx = canvas.getContext("2d");
