@@ -1,5 +1,5 @@
 export default class MovingCicle {
-  constructor(radius) {
+  constructor(x, y, radius) {
 
   }
 
@@ -8,7 +8,9 @@ export default class MovingCicle {
   }
 
   draw(ctx) {
-
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fill();
   }
 
   animate(ctx) {
