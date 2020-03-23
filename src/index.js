@@ -1,6 +1,6 @@
-import game from './game.js';
+import Game from './game';
 
 const canvas = document.getElementById('canvas');
 const cam = document.getElementById('camera');
-new game(canvas, cam);
+new Game(canvas, cam);
 
