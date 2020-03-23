@@ -97,11 +97,13 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _movingCircle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movingCircle */ "./src/movingCircle.js");
+/* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./player */ "./src/player.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -111,11 +113,11 @@ var Game = /*#__PURE__*/function () {
 
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    this.dimensions = {
+    this.size = {
       width: canvas.width,
       height: canvas.height
     };
-    this.player = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](this.dimensions.width / 2, this.dimensions.height / 2, 10);
+    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__["default"](this.size.width / 2, this.size.height / 2, 10);
     this.moving = {
       up: false,
       left: false,
@@ -151,11 +153,12 @@ var Game = /*#__PURE__*/function () {
       if (this.moving.left) this.player.move(-2);
       if (this.moving.down) this.player.move(0, 2);
       if (this.moving.right) this.player.move(2);
+      this.player.inBound(this.size);
     }
   }, {
     key: "animate",
     value: function animate() {
-      this.ctx.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+      this.ctx.clearRect(0, 0, this.size.width, this.size.height);
       this.movePlayer();
       this.player.animate(this.ctx);
       console.log('running');
@@ -261,6 +264,69 @@ var MovingCicle = /*#__PURE__*/function () {
 
   return MovingCicle;
 }();
+
+
+
+/***/ }),
+
+/***/ "./src/player.js":
+/*!***********************!*\
+  !*** ./src/player.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Player; });
+/* harmony import */ var _movingCircle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movingCircle */ "./src/movingCircle.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var Player = /*#__PURE__*/function (_MovingCircle) {
+  _inherits(Player, _MovingCircle);
+
+  var _super = _createSuper(Player);
+
+  function Player() {
+    _classCallCheck(this, Player);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(Player, [{
+    key: "inBound",
+    value: function inBound(size) {
+      if (this.x < this.radius) this.x = this.radius;
+      if (this.x > size.width - this.radius) this.x = size.width - this.radius;
+      if (this.y < this.radius) this.y = this.radius;
+      if (this.y > size.height - this.radius) this.y = size.height - this.radius;
+    }
+  }]);
+
+  return Player;
+}(_movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
 

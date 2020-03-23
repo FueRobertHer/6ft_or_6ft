@@ -1,15 +1,16 @@
 import MovingCircle from './movingCircle'
+import Player from './player'
 
 export default class Game {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext("2d");
-    this.dimensions = {
+    this.size = {
       width: canvas.width,
       height: canvas.height
     }
 
-    this.player = new MovingCircle(this.dimensions.width/2, this.dimensions.height/2, 10)
+    this.player = new Player(this.size.width/2, this.size.height/2, 10)
     this.moving = {
       up: false,
       left: false,
@@ -40,10 +41,11 @@ export default class Game {
     if (this.moving.left) this.player.move(-2)
     if (this.moving.down) this.player.move(0, 2)
     if (this.moving.right) this.player.move(2)
+    this.player.inBound(this.size)
   }
 
   animate() {
-    this.ctx.clearRect(0, 0, this.dimensions.width, this.dimensions.height)
+    this.ctx.clearRect(0, 0, this.size.width, this.size.height)
     this.movePlayer()
     this.player.animate(this.ctx)
     console.log('running');
