@@ -7,13 +7,17 @@ export default class MovingCicle {
     this.xVel = 0
     this.yVel = 0
 
+    this.color = 'red'
   }
 
   isTouching(other) {
     let a = Math.abs(other.x - this.x)
     let b = Math.abs(other.y - this.y)
-    let c = Math.sqrt(a**2 + b**2)
-    return c < this.radius
+    let c = Math.sqrt(a*a + b*b)
+    // console.log(a,b,c);
+    
+    
+    return c < this.radius + other.radius
   }
 
   move(x = 0, y = 0) {
@@ -30,7 +34,7 @@ export default class MovingCicle {
   }
 
   draw(ctx) {
-    ctx.fillStyle = 'yellow'
+    ctx.fillStyle = this.color
     ctx.beginPath()
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI)
     ctx.fill()

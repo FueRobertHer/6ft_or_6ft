@@ -9,8 +9,8 @@ export default class Game {
       width: canvas.width,
       height: canvas.height
     }
-
-    this.player = new Player(this.size.width/2, this.size.height/2, 10)
+    this.other = new MovingCircle(this.size.width * .5, this.size.height * .5, 10)
+    this.player = new Player(this.size.width*.5, this.size.height*.8, 10)
     this.moving = {
       up: false,
       left: false,
@@ -44,9 +44,15 @@ export default class Game {
     this.player.inBound(this.size)
   }
 
+  playerIsTouch(other) {
+    if (this.player.isTouching(this.other)) this.other.move(0, -10)
+  }
+
   animate() {
     this.ctx.clearRect(0, 0, this.size.width, this.size.height)
     this.movePlayer()
+    this.playerIsTouch()
+    this.other.animate(this.ctx)
     this.player.animate(this.ctx)
     console.log('running');
     

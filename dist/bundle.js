@@ -117,7 +117,8 @@ var Game = /*#__PURE__*/function () {
       width: canvas.width,
       height: canvas.height
     };
-    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__["default"](this.size.width / 2, this.size.height / 2, 10);
+    this.other = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .5, 10);
+    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__["default"](this.size.width * .5, this.size.height * .8, 10);
     this.moving = {
       up: false,
       left: false,
@@ -156,10 +157,17 @@ var Game = /*#__PURE__*/function () {
       this.player.inBound(this.size);
     }
   }, {
+    key: "playerIsTouch",
+    value: function playerIsTouch(other) {
+      if (this.player.isTouching(this.other)) this.other.move(0, -10);
+    }
+  }, {
     key: "animate",
     value: function animate() {
       this.ctx.clearRect(0, 0, this.size.width, this.size.height);
       this.movePlayer();
+      this.playerIsTouch();
+      this.other.animate(this.ctx);
       this.player.animate(this.ctx);
       console.log('running');
     }
@@ -220,6 +228,7 @@ var MovingCicle = /*#__PURE__*/function () {
     this.radius = radius;
     this.xVel = 0;
     this.yVel = 0;
+    this.color = 'red';
   }
 
   _createClass(MovingCicle, [{
@@ -227,8 +236,9 @@ var MovingCicle = /*#__PURE__*/function () {
     value: function isTouching(other) {
       var a = Math.abs(other.x - this.x);
       var b = Math.abs(other.y - this.y);
-      var c = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-      return c < this.radius;
+      var c = Math.sqrt(a * a + b * b); // console.log(a,b,c);
+
+      return c < this.radius + other.radius;
     }
   }, {
     key: "move",
@@ -249,7 +259,7 @@ var MovingCicle = /*#__PURE__*/function () {
   }, {
     key: "draw",
     value: function draw(ctx) {
-      ctx.fillStyle = 'yellow';
+      ctx.fillStyle = this.color;
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
       ctx.fill();
@@ -309,10 +319,14 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
 
   var _super = _createSuper(Player);
 
-  function Player() {
+  function Player(x, y, radius) {
+    var _this;
+
     _classCallCheck(this, Player);
 
-    return _super.apply(this, arguments);
+    _this = _super.call(this, x, y, radius);
+    _this.color = 'yellow';
+    return _this;
   }
 
   _createClass(Player, [{
