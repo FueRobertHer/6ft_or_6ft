@@ -10,6 +10,9 @@ export default class Game {
       height: canvas.height
     }
     this.other = new MovingCircle(this.size.width * .5, this.size.height * .5, 10)
+    
+    this.things = [this.other]
+
     this.player = new Player(this.size.width*.5, this.size.height*.8, 10)
     this.moving = {
       up: false,
@@ -34,6 +37,13 @@ export default class Game {
       if (e.key == 's' || e.key == 'ArrowDown') this.moving.down = false
       if (e.key == 'd' || e.key == 'ArrowRight') this.moving.right = false
     })
+    document.addEventListener('click', (e) => {
+      let pos = this.player.pos()
+      let tp = new MovingCircle(pos.x, pos.y, 2)
+      this.things.push(tp)
+      console.log(this.getMousePos(canvas, e));
+      
+    })
   }
 
   movePlayer() {
@@ -45,17 +55,24 @@ export default class Game {
   }
 
   playerIsTouch(other) {
-    if (this.player.isTouching(this.other)) this.other.move(0, -10)
+    if (this.player.isTouching(this.other)) this.other.move(this.player.xVel, this.player.yVel)
+  }
+
+  getMousePos(canvas, evt) {
+    let rect = canvas.getBoundingClientRect()
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    }
   }
 
   animate() {
     this.ctx.clearRect(0, 0, this.size.width, this.size.height)
     this.movePlayer()
     this.playerIsTouch()
-    this.other.animate(this.ctx)
+    this.things.forEach(thing => (thing.animate(this.ctx)))
+    // this.other.animate(this.ctx)
     this.player.animate(this.ctx)
-    console.log('running');
-    
   }
 
   play() {

@@ -10,6 +10,13 @@ export default class MovingCicle {
     this.color = 'red'
   }
 
+  pos() {
+    return {
+      x: this.x,
+      y: this.y
+    }
+  }
+
   isTouching(other) {
     let a = Math.abs(other.x - this.x)
     let b = Math.abs(other.y - this.y)
@@ -29,8 +36,7 @@ export default class MovingCicle {
     this.x += this.xVel
     this.y += this.yVel
 
-    this.xVel *= .3
-    this.yVel *= .3
+ 
   }
 
   draw(ctx) {

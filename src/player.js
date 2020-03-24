@@ -5,6 +5,16 @@ export default class Player extends MovingCircle {
     super(x, y, radius)
     
     this.color = 'yellow'
+    this.tp = []
+    this.food = 50
+  }
+
+  update() {
+    this.x += this.xVel
+    this.y += this.yVel
+
+    this.xVel *= .3
+    this.yVel *= .3
   }
 
   inBound(size) {

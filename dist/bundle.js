@@ -118,6 +118,7 @@ var Game = /*#__PURE__*/function () {
       height: canvas.height
     };
     this.other = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .5, 10);
+    this.things = [this.other];
     this.player = new _player__WEBPACK_IMPORTED_MODULE_1__["default"](this.size.width * .5, this.size.height * .8, 10);
     this.moving = {
       up: false,
@@ -146,6 +147,15 @@ var Game = /*#__PURE__*/function () {
         if (e.key == 's' || e.key == 'ArrowDown') _this.moving.down = false;
         if (e.key == 'd' || e.key == 'ArrowRight') _this.moving.right = false;
       });
+      document.addEventListener('click', function (e) {
+        var pos = _this.player.pos();
+
+        var tp = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](pos.x, pos.y, 2);
+
+        _this.things.push(tp);
+
+        console.log(_this.getMousePos(canvas, e));
+      });
     }
   }, {
     key: "movePlayer",
@@ -159,17 +169,30 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "playerIsTouch",
     value: function playerIsTouch(other) {
-      if (this.player.isTouching(this.other)) this.other.move(0, -10);
+      if (this.player.isTouching(this.other)) this.other.move(this.player.xVel, this.player.yVel);
+    }
+  }, {
+    key: "getMousePos",
+    value: function getMousePos(canvas, evt) {
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top
+      };
     }
   }, {
     key: "animate",
     value: function animate() {
+      var _this2 = this;
+
       this.ctx.clearRect(0, 0, this.size.width, this.size.height);
       this.movePlayer();
       this.playerIsTouch();
-      this.other.animate(this.ctx);
+      this.things.forEach(function (thing) {
+        return thing.animate(_this2.ctx);
+      }); // this.other.animate(this.ctx)
+
       this.player.animate(this.ctx);
-      console.log('running');
     }
   }, {
     key: "play",
@@ -232,6 +255,14 @@ var MovingCicle = /*#__PURE__*/function () {
   }
 
   _createClass(MovingCicle, [{
+    key: "pos",
+    value: function pos() {
+      return {
+        x: this.x,
+        y: this.y
+      };
+    }
+  }, {
     key: "isTouching",
     value: function isTouching(other) {
       var a = Math.abs(other.x - this.x);
@@ -253,8 +284,6 @@ var MovingCicle = /*#__PURE__*/function () {
     value: function update() {
       this.x += this.xVel;
       this.y += this.yVel;
-      this.xVel *= .3;
-      this.yVel *= .3;
     }
   }, {
     key: "draw",
@@ -326,10 +355,20 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'yellow';
+    _this.tp = [];
+    _this.food = 50;
     return _this;
   }
 
   _createClass(Player, [{
+    key: "update",
+    value: function update() {
+      this.x += this.xVel;
+      this.y += this.yVel;
+      this.xVel *= .3;
+      this.yVel *= .3;
+    }
+  }, {
     key: "inBound",
     value: function inBound(size) {
       if (this.x < this.radius) this.x = this.radius;
