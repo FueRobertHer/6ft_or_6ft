@@ -152,9 +152,28 @@ var Game = /*#__PURE__*/function () {
 
         var tp = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](pos.x, pos.y, 2);
 
+        var mPos = _this.getMousePos(_this.canvas, e);
+
+        var x = mPos.x - pos.x;
+        var y = mPos.y - pos.y;
+        var angle = Math.asin(x / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+        console.log('angle', angle);
+        tp.xVel += Math.sin(angle);
+        y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1;
+
         _this.things.push(tp);
 
-        console.log(_this.getMousePos(canvas, e));
+        console.log(tp.xVel, tp.yVel);
+        console.log(_this.things);
+      });
+    }
+  }, {
+    key: "removeNotInBound",
+    value: function removeNotInBound() {
+      var _this2 = this;
+
+      this.things = this.things.filter(function (thing) {
+        return thing.inBound(_this2.size);
       });
     }
   }, {
@@ -183,15 +202,15 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "animate",
     value: function animate() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.ctx.clearRect(0, 0, this.size.width, this.size.height);
       this.movePlayer();
       this.playerIsTouch();
+      this.removeNotInBound();
       this.things.forEach(function (thing) {
-        return thing.animate(_this2.ctx);
-      }); // this.other.animate(this.ctx)
-
+        return thing.animate(_this3.ctx);
+      });
       this.player.animate(this.ctx);
     }
   }, {
@@ -261,6 +280,13 @@ var MovingCicle = /*#__PURE__*/function () {
         x: this.x,
         y: this.y
       };
+    }
+  }, {
+    key: "inBound",
+    value: function inBound(size) {
+      if (this.x + this.radius < 0 || this.x - this.radius > size.width) return false;
+      if (this.y + this.radius < 0 || this.y - this.radius > size.height) return false;
+      return true;
     }
   }, {
     key: "isTouching",
@@ -361,20 +387,20 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
   }
 
   _createClass(Player, [{
-    key: "update",
-    value: function update() {
-      this.x += this.xVel;
-      this.y += this.yVel;
-      this.xVel *= .3;
-      this.yVel *= .3;
-    }
-  }, {
     key: "inBound",
     value: function inBound(size) {
       if (this.x < this.radius) this.x = this.radius;
       if (this.x > size.width - this.radius) this.x = size.width - this.radius;
       if (this.y < this.radius) this.y = this.radius;
       if (this.y > size.height - this.radius) this.y = size.height - this.radius;
+    }
+  }, {
+    key: "update",
+    value: function update() {
+      this.x += this.xVel;
+      this.y += this.yVel;
+      this.xVel *= .3;
+      this.yVel *= .3;
     }
   }]);
 

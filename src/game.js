@@ -40,10 +40,22 @@ export default class Game {
     document.addEventListener('click', (e) => {
       let pos = this.player.pos()
       let tp = new MovingCircle(pos.x, pos.y, 2)
-      this.things.push(tp)
-      console.log(this.getMousePos(canvas, e));
+      let mPos = this.getMousePos(this.canvas, e)
+      let x = mPos.x - pos.x
+      let y = mPos.y - pos.y
+      let angle = Math.asin(x/Math.sqrt(x**2 + y**2))
+      console.log('angle', angle);
       
+      tp.xVel += Math.sin(angle)
+      y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1
+      this.things.push(tp)
+      console.log(tp.xVel, tp.yVel);
+      console.log(this.things);
     })
+  }
+
+  removeNotInBound() {
+    this.things = this.things.filter(thing => (thing.inBound(this.size)))
   }
 
   movePlayer() {
@@ -70,9 +82,10 @@ export default class Game {
     this.ctx.clearRect(0, 0, this.size.width, this.size.height)
     this.movePlayer()
     this.playerIsTouch()
+    this.removeNotInBound()
     this.things.forEach(thing => (thing.animate(this.ctx)))
-    // this.other.animate(this.ctx)
     this.player.animate(this.ctx)
+    
   }
 
   play() {

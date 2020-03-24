@@ -17,6 +17,12 @@ export default class MovingCicle {
     }
   }
 
+  inBound(size) {
+    if (this.x + this.radius < 0 || this.x - this.radius > size.width) return false
+    if (this.y + this.radius < 0 || this.y - this.radius > size.height) return false
+    return true
+  }
+
   isTouching(other) {
     let a = Math.abs(other.x - this.x)
     let b = Math.abs(other.y - this.y)
