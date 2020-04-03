@@ -5,8 +5,12 @@ export default class Player extends MovingCircle {
     super(x, y, radius)
     
     this.color = 'yellow'
-    this.tp = []
+    this.tpAmmo = 5
     this.food = 50
+  }
+
+  hasTP() {
+    return this.tpAmmo > 0
   }
 
   inBound(size) {

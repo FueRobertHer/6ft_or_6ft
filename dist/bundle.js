@@ -129,12 +129,18 @@ var Game = /*#__PURE__*/function () {
       right: false
     };
     this.play();
-    this.listen();
+    this.initListeners();
   }
 
   _createClass(Game, [{
-    key: "listen",
-    value: function listen() {
+    key: "initListeners",
+    value: function initListeners() {
+      this.movementListener();
+      this.throwTPListener();
+    }
+  }, {
+    key: "movementListener",
+    value: function movementListener() {
       var _this = this;
 
       document.addEventListener('keydown', function (e) {
@@ -149,32 +155,44 @@ var Game = /*#__PURE__*/function () {
         if (e.key == 's' || e.key == 'ArrowDown') _this.moving.down = false;
         if (e.key == 'd' || e.key == 'ArrowRight') _this.moving.right = false;
       });
+    }
+  }, {
+    key: "throwTPListener",
+    value: function throwTPListener() {
+      var _this2 = this;
+
       document.addEventListener('click', function (e) {
-        var pos = _this.player.pos();
+        if (_this2.player.hasTP()) {
+          var pos = _this2.player.pos();
 
-        var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"](pos.x, pos.y);
+          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"](pos.x, pos.y);
 
-        var mPos = _this.getMousePos(_this.canvas, e);
+          var mPos = _this2.getMousePos(_this2.canvas, e);
 
-        var x = mPos.x - pos.x;
-        var y = mPos.y - pos.y;
-        var angle = Math.asin(x / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
-        var xVel = Math.sin(angle);
-        var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
-        tp.xVel += xVel * 5;
-        tp.yVel += yVel * 4;
-        y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1;
+          var x = mPos.x - pos.x;
+          var y = mPos.y - pos.y;
+          var angle = Math.asin(x / Math.hypot(x, y));
+          var xVel = Math.sin(angle);
+          var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
+          tp.xVel += xVel * 5;
+          tp.yVel += yVel * 4;
+          y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1;
 
-        _this.things.push(tp);
+          _this2.things.push(tp);
+
+          _this2.player.tpAmmo--;
+        } else {
+          console.log('need ammo');
+        }
       });
     }
   }, {
     key: "removeNotInBound",
     value: function removeNotInBound() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.things = this.things.filter(function (thing) {
-        return thing.inBound(_this2.size);
+        return thing.inBound(_this3.size);
       });
     }
   }, {
@@ -203,14 +221,14 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "animate",
     value: function animate() {
-      var _this3 = this;
+      var _this4 = this;
 
       this.ctx.clearRect(0, 0, this.size.width, this.size.height);
       this.movePlayer();
       this.playerIsTouch();
       this.removeNotInBound();
       this.things.forEach(function (thing) {
-        return thing.animate(_this3.ctx);
+        return thing.animate(_this4.ctx);
       });
       this.player.animate(this.ctx);
     }
@@ -292,9 +310,9 @@ var MovingCicle = /*#__PURE__*/function () {
   }, {
     key: "isTouching",
     value: function isTouching(other) {
-      var a = Math.abs(other.x - this.x);
-      var b = Math.abs(other.y - this.y);
-      var c = Math.sqrt(a * a + b * b); // console.log(a,b,c);
+      var a = other.x - this.x;
+      var b = other.y - this.y;
+      var c = Math.hypot(a, b); // console.log(a,b,c);
 
       return c < this.radius + other.radius;
     }
@@ -382,12 +400,17 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'yellow';
-    _this.tp = [];
+    _this.tpAmmo = 5;
     _this.food = 50;
     return _this;
   }
 
   _createClass(Player, [{
+    key: "hasTP",
+    value: function hasTP() {
+      return this.tpAmmo > 0;
+    }
+  }, {
     key: "inBound",
     value: function inBound(size) {
       if (this.x < this.radius) this.x = this.radius;
@@ -462,6 +485,7 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
     _this = _super.call(this, x, y, radius);
     _this.color = 'blue';
     _this.attractRadius = radius * 10;
+    _this.hp = 100;
     _this.land = _this.land.bind(_assertThisInitialized(_this));
 
     _this.land();

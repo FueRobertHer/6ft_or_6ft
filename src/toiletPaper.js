@@ -7,6 +7,8 @@ export default class ToiletPaper extends MovingCirlce {
     this.color = 'blue'
     this.attractRadius = radius * 10
 
+    this.hp = 100
+
     this.land = this.land.bind(this)
     this.land()
   }

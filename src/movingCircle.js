@@ -24,9 +24,9 @@ export default class MovingCicle {
   }
 
   isTouching(other) {
-    let a = Math.abs(other.x - this.x)
-    let b = Math.abs(other.y - this.y)
-    let c = Math.sqrt(a*a + b*b)
+    let a = other.x - this.x
+    let b = other.y - this.y
+    let c = Math.hypot(a,b)
     // console.log(a,b,c);
     
     

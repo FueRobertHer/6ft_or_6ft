@@ -22,10 +22,15 @@ export default class Game {
       right: false
     }
     this.play()
-    this.listen()
+    this.initListeners()
   }
 
-  listen() {
+  initListeners() {
+    this.movementListener()
+    this.throwTPListener()
+  }
+
+  movementListener() {
     document.addEventListener('keydown', (e) => {
       if (e.key == 'w' || e.key == 'ArrowUp') this.moving.up = true
       if (e.key == 'a' || e.key == 'ArrowLeft') this.moving.left = true
@@ -38,19 +43,28 @@ export default class Game {
       if (e.key == 's' || e.key == 'ArrowDown') this.moving.down = false
       if (e.key == 'd' || e.key == 'ArrowRight') this.moving.right = false
     })
+  }
+
+  throwTPListener() {
     document.addEventListener('click', (e) => {
-      let pos = this.player.pos()
-      let tp = new ToiletPaper(pos.x, pos.y)
-      let mPos = this.getMousePos(this.canvas, e)
-      let x = mPos.x - pos.x
-      let y = mPos.y - pos.y
-      let angle = Math.asin(x/Math.sqrt(x**2 + y**2))
-      let xVel = Math.sin(angle)
-      let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
-      tp.xVel += xVel * 5
-      tp.yVel += yVel * 4
-      y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1
-      this.things.push(tp)
+      if (this.player.hasTP()) {
+        let pos = this.player.pos()
+        let tp = new ToiletPaper(pos.x, pos.y)
+        let mPos = this.getMousePos(this.canvas, e)
+        let x = mPos.x - pos.x
+        let y = mPos.y - pos.y
+        let angle = Math.asin(x / Math.hypot(x,y))
+        let xVel = Math.sin(angle)
+        let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
+        tp.xVel += xVel * 5
+        tp.yVel += yVel * 4
+        y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1
+        this.things.push(tp)
+        this.player.tpAmmo--
+      } else {
+        console.log('need ammo')
+      }
+      
     })
   }
 
