@@ -159,17 +159,13 @@ var Game = /*#__PURE__*/function () {
         var x = mPos.x - pos.x;
         var y = mPos.y - pos.y;
         var angle = Math.asin(x / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
-        console.log('angle', angle);
         var xVel = Math.sin(angle);
         var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
-        tp.xVel += xVel * 2;
-        tp.yVel += yVel * 2;
+        tp.xVel += xVel * 5;
+        tp.yVel += yVel * 4;
         y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1;
 
         _this.things.push(tp);
-
-        console.log(tp.xVel, tp.yVel);
-        console.log(_this.things);
       });
     }
   }, {
@@ -431,6 +427,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -460,11 +460,27 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
     _classCallCheck(this, ToiletPaper);
 
     _this = _super.call(this, x, y, radius);
-    _this.color = 'yellow';
-    _this.tp = [];
-    _this.food = 50;
+    _this.color = 'blue';
+    _this.attractRadius = radius * 10;
+    _this.land = _this.land.bind(_assertThisInitialized(_this));
+
+    _this.land();
+
     return _this;
   }
+
+  _createClass(ToiletPaper, [{
+    key: "land",
+    value: function land() {
+      setTimeout(this.resetVel.bind(this), 500);
+    }
+  }, {
+    key: "resetVel",
+    value: function resetVel() {
+      this.xVel = 0;
+      this.yVel = 0;
+    }
+  }]);
 
   return ToiletPaper;
 }(_movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"]);

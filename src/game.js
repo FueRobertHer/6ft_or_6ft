@@ -45,15 +45,12 @@ export default class Game {
       let x = mPos.x - pos.x
       let y = mPos.y - pos.y
       let angle = Math.asin(x/Math.sqrt(x**2 + y**2))
-      console.log('angle', angle);
       let xVel = Math.sin(angle)
       let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
-      tp.xVel += xVel * 2
-      tp.yVel += yVel * 2
+      tp.xVel += xVel * 5
+      tp.yVel += yVel * 4
       y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1
       this.things.push(tp)
-      console.log(tp.xVel, tp.yVel);
-      console.log(this.things);
     })
   }
 
