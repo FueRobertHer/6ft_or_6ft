@@ -1,5 +1,6 @@
 import MovingCircle from './movingCircle'
 import Player from './player'
+import ToiletPaper from './toiletPaper'
 
 export default class Game {
   constructor(canvas) {
@@ -39,14 +40,16 @@ export default class Game {
     })
     document.addEventListener('click', (e) => {
       let pos = this.player.pos()
-      let tp = new MovingCircle(pos.x, pos.y, 2)
+      let tp = new ToiletPaper(pos.x, pos.y)
       let mPos = this.getMousePos(this.canvas, e)
       let x = mPos.x - pos.x
       let y = mPos.y - pos.y
       let angle = Math.asin(x/Math.sqrt(x**2 + y**2))
       console.log('angle', angle);
-      
-      tp.xVel += Math.sin(angle)
+      let xVel = Math.sin(angle)
+      let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
+      tp.xVel += xVel * 2
+      tp.yVel += yVel * 2
       y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1
       this.things.push(tp)
       console.log(tp.xVel, tp.yVel);

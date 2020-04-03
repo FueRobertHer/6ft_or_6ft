@@ -98,11 +98,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _movingCircle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movingCircle */ "./src/movingCircle.js");
 /* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./player */ "./src/player.js");
+/* harmony import */ var _toiletPaper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./toiletPaper */ "./src/toiletPaper.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 
@@ -150,7 +152,7 @@ var Game = /*#__PURE__*/function () {
       document.addEventListener('click', function (e) {
         var pos = _this.player.pos();
 
-        var tp = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](pos.x, pos.y, 2);
+        var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"](pos.x, pos.y);
 
         var mPos = _this.getMousePos(_this.canvas, e);
 
@@ -158,7 +160,10 @@ var Game = /*#__PURE__*/function () {
         var y = mPos.y - pos.y;
         var angle = Math.asin(x / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
         console.log('angle', angle);
-        tp.xVel += Math.sin(angle);
+        var xVel = Math.sin(angle);
+        var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
+        tp.xVel += xVel * 2;
+        tp.yVel += yVel * 2;
         y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1;
 
         _this.things.push(tp);
@@ -405,6 +410,63 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
   }]);
 
   return Player;
+}(_movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+
+/***/ "./src/toiletPaper.js":
+/*!****************************!*\
+  !*** ./src/toiletPaper.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return ToiletPaper; });
+/* harmony import */ var _movingCircle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movingCircle */ "./src/movingCircle.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
+  _inherits(ToiletPaper, _MovingCirlce);
+
+  var _super = _createSuper(ToiletPaper);
+
+  function ToiletPaper(x, y) {
+    var _this;
+
+    var radius = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+
+    _classCallCheck(this, ToiletPaper);
+
+    _this = _super.call(this, x, y, radius);
+    _this.color = 'yellow';
+    _this.tp = [];
+    _this.food = 50;
+    return _this;
+  }
+
+  return ToiletPaper;
 }(_movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 
