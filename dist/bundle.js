@@ -96,14 +96,17 @@
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
-/* harmony import */ var _movingCircle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movingCircle */ "./src/movingCircle.js");
-/* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./player */ "./src/player.js");
-/* harmony import */ var _toiletPaper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./toiletPaper */ "./src/toiletPaper.js");
+/* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player */ "./src/player.js");
+/* harmony import */ var _people__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./people */ "./src/people.js");
+/* harmony import */ var _peopleMaker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./peopleMaker */ "./src/peopleMaker.js");
+/* harmony import */ var _toiletPaper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./toiletPaper */ "./src/toiletPaper.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+// import MovingCircle from './movingCircle'
 
 
 
@@ -119,9 +122,9 @@ var Game = /*#__PURE__*/function () {
       width: canvas.width,
       height: canvas.height
     };
-    this.other = new _movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .5, 10);
-    this.things = [this.other];
-    this.player = new _player__WEBPACK_IMPORTED_MODULE_1__["default"](this.size.width * .5, this.size.height * .8, 10);
+    this.peopleMaker = new _peopleMaker__WEBPACK_IMPORTED_MODULE_2__["default"](this.size);
+    this.things = [this.peopleMaker.makeRandomPerson()];
+    this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .8, 10);
     this.moving = {
       up: false,
       left: false,
@@ -165,7 +168,7 @@ var Game = /*#__PURE__*/function () {
         if (_this2.player.hasTP()) {
           var pos = _this2.player.pos();
 
-          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"](pos.x, pos.y);
+          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"](pos.x, pos.y);
 
           var mPos = _this2.getMousePos(_this2.canvas, e);
 
@@ -211,7 +214,7 @@ var Game = /*#__PURE__*/function () {
 
       this.things.forEach(function (thing) {
         if (_this4.player.isTouching(thing)) {
-          if (thing instanceof _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+          if (thing instanceof _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"]) {
             console.log('tp');
           } else {
             console.log(thing);
@@ -314,7 +317,7 @@ var MovingCicle = /*#__PURE__*/function () {
     key: "inBound",
     value: function inBound(size) {
       if (this.x + this.radius < 0 || this.x - this.radius > size.width) return false;
-      if (this.y + this.radius < 0 || this.y - this.radius > size.height) return false;
+      if (this.y + this.radius < -20 || this.y - this.radius > size.height) return false;
       return true;
     }
   }, {
@@ -362,6 +365,115 @@ var MovingCicle = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./src/people.js":
+/*!***********************!*\
+  !*** ./src/people.js ***!
+  \***********************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return People; });
+/* harmony import */ var _movingCircle__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movingCircle */ "./src/movingCircle.js");
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+var People = /*#__PURE__*/function (_MovingCircle) {
+  _inherits(People, _MovingCircle);
+
+  var _super = _createSuper(People);
+
+  function People(x, y) {
+    var _this;
+
+    var radius = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
+
+    _classCallCheck(this, People);
+
+    _this = _super.call(this, x, y, radius);
+    _this.yVel = 5;
+    _this.color = 'red';
+    return _this;
+  }
+
+  return People;
+}(_movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+
+/***/ }),
+
+/***/ "./src/peopleMaker.js":
+/*!****************************!*\
+  !*** ./src/peopleMaker.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return peopleMaker; });
+/* harmony import */ var _people__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./people */ "./src/people.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+
+var peopleMaker = /*#__PURE__*/function () {
+  function peopleMaker(size) {
+    _classCallCheck(this, peopleMaker);
+
+    this.width = size.width;
+    this.height = size.height;
+  }
+
+  _createClass(peopleMaker, [{
+    key: "randomPeopleSize",
+    value: function randomPeopleSize() {
+      return Math.floor(Math.random() * (12 - 7) + 7);
+    }
+  }, {
+    key: "randomX",
+    value: function randomX() {
+      return Math.floor(Math.random() * (this.width - 30) + 30);
+    }
+  }, {
+    key: "makeRandomPerson",
+    value: function makeRandomPerson() {
+      var x = this.randomX();
+      var radius = this.randomPeopleSize();
+      return new _people__WEBPACK_IMPORTED_MODULE_0__["default"](x, -20, radius);
+    }
+  }]);
+
+  return peopleMaker;
+}();
+
+
+
+/***/ }),
+
 /***/ "./src/player.js":
 /*!***********************!*\
   !*** ./src/player.js ***!
@@ -402,8 +514,10 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
 
   var _super = _createSuper(Player);
 
-  function Player(x, y, radius) {
+  function Player(x, y) {
     var _this;
+
+    var radius = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 10;
 
     _classCallCheck(this, Player);
 

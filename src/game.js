@@ -1,5 +1,7 @@
-import MovingCircle from './movingCircle'
+// import MovingCircle from './movingCircle'
 import Player from './player'
+import People from './people'
+import PeopleMaker from './peopleMaker'
 import ToiletPaper from './toiletPaper'
 
 export default class Game {
@@ -10,9 +12,9 @@ export default class Game {
       width: canvas.width,
       height: canvas.height
     }
-    this.other = new MovingCircle(this.size.width * .5, this.size.height * .5, 10)
+    this.peopleMaker = new PeopleMaker(this.size)
     
-    this.things = [this.other]
+    this.things = [this.peopleMaker.makeRandomPerson()]
 
     this.player = new Player(this.size.width*.5, this.size.height*.8, 10)
     this.moving = {
