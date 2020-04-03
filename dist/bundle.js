@@ -205,9 +205,19 @@ var Game = /*#__PURE__*/function () {
       this.player.inBound(this.size);
     }
   }, {
-    key: "playerIsTouch",
-    value: function playerIsTouch(other) {
-      if (this.player.isTouching(this.other)) this.other.move(this.player.xVel, this.player.yVel);
+    key: "playerIsTouchingThings",
+    value: function playerIsTouchingThings() {
+      var _this4 = this;
+
+      this.things.forEach(function (thing) {
+        if (_this4.player.isTouching(thing)) {
+          if (thing instanceof _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"]) {
+            console.log('tp');
+          } else {
+            console.log(thing);
+          }
+        }
+      });
     }
   }, {
     key: "getMousePos",
@@ -221,14 +231,14 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "animate",
     value: function animate() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.ctx.clearRect(0, 0, this.size.width, this.size.height);
       this.movePlayer();
-      this.playerIsTouch();
+      this.playerIsTouchingThings();
       this.removeNotInBound();
       this.things.forEach(function (thing) {
-        return thing.animate(_this4.ctx);
+        return thing.animate(_this5.ctx);
       });
       this.player.animate(this.ctx);
     }
@@ -289,7 +299,7 @@ var MovingCicle = /*#__PURE__*/function () {
     this.radius = radius;
     this.xVel = 0;
     this.yVel = 0;
-    this.color = 'red';
+    this.color = 'black';
   }
 
   _createClass(MovingCicle, [{
@@ -312,8 +322,7 @@ var MovingCicle = /*#__PURE__*/function () {
     value: function isTouching(other) {
       var a = other.x - this.x;
       var b = other.y - this.y;
-      var c = Math.hypot(a, b); // console.log(a,b,c);
-
+      var c = Math.hypot(a, b);
       return c < this.radius + other.radius;
     }
   }, {

@@ -80,8 +80,16 @@ export default class Game {
     this.player.inBound(this.size)
   }
 
-  playerIsTouch(other) {
-    if (this.player.isTouching(this.other)) this.other.move(this.player.xVel, this.player.yVel)
+  playerIsTouchingThings() {
+    this.things.forEach(thing => {
+      if (this.player.isTouching(thing)) {
+        if (thing instanceof ToiletPaper) {
+          console.log('tp')
+        } else {
+          console.log(thing)
+        }
+      }
+    })
   }
 
   getMousePos(canvas, evt) {
@@ -95,7 +103,7 @@ export default class Game {
   animate() {
     this.ctx.clearRect(0, 0, this.size.width, this.size.height)
     this.movePlayer()
-    this.playerIsTouch()
+    this.playerIsTouchingThings()
     this.removeNotInBound()
     this.things.forEach(thing => (thing.animate(this.ctx)))
     this.player.animate(this.ctx)
@@ -107,4 +115,4 @@ export default class Game {
     requestAnimationFrame(this.play.bind(this))
   }
 
-}
+    }

@@ -7,7 +7,7 @@ export default class MovingCicle {
     this.xVel = 0
     this.yVel = 0
 
-    this.color = 'red'
+    this.color = 'black'
   }
 
   pos() {
@@ -27,8 +27,6 @@ export default class MovingCicle {
     let a = other.x - this.x
     let b = other.y - this.y
     let c = Math.hypot(a,b)
-    // console.log(a,b,c);
-    
     
     return c < this.radius + other.radius
   }
