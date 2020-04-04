@@ -11,7 +11,7 @@ export default class peopleMaker {
   }
 
   randomX() {
-    return Math.floor(Math.random() * (this.width - 30) + 30)
+    return Math.floor(Math.random() * (this.width - 40) + 20)
   }
 
   makeRandomPerson() {

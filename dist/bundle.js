@@ -122,6 +122,7 @@ var Game = /*#__PURE__*/function () {
       width: canvas.width,
       height: canvas.height
     };
+    this.interval = 1000;
     this.peopleMaker = new _peopleMaker__WEBPACK_IMPORTED_MODULE_2__["default"](this.size);
     this.things = [this.peopleMaker.makeRandomPerson()];
     this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .8, 10);
@@ -133,9 +134,20 @@ var Game = /*#__PURE__*/function () {
     };
     this.play();
     this.initListeners();
+    this.autoMakePeople();
+    setInterval(this.increaseTraffic.bind(this), 5000);
   }
 
   _createClass(Game, [{
+    key: "increaseTraffic",
+    value: function increaseTraffic() {
+      if (this.interval > 100) {
+        this.interval -= 100;
+      } else if (this.interval > 0) {
+        this.interval -= 10;
+      }
+    }
+  }, {
     key: "initListeners",
     value: function initListeners() {
       this.movementListener();
@@ -190,6 +202,24 @@ var Game = /*#__PURE__*/function () {
       });
     }
   }, {
+    key: "makeRandomPeople",
+    value: function makeRandomPeople() {
+      var person = this.peopleMaker.makeRandomPerson();
+      this.things.push(person);
+    }
+  }, {
+    key: "autoMakePeople",
+    value: function autoMakePeople() {
+      var time = this.randomInterval();
+      setTimeout(this.makeRandomPeople.bind(this), time);
+      setTimeout(this.autoMakePeople.bind(this), time);
+    }
+  }, {
+    key: "randomInterval",
+    value: function randomInterval() {
+      return Math.floor(Math.random() * this.interval);
+    }
+  }, {
     key: "removeNotInBound",
     value: function removeNotInBound() {
       var _this3 = this;
@@ -201,10 +231,10 @@ var Game = /*#__PURE__*/function () {
   }, {
     key: "movePlayer",
     value: function movePlayer() {
-      if (this.moving.up) this.player.move(0, -2);
-      if (this.moving.left) this.player.move(-2);
-      if (this.moving.down) this.player.move(0, 2);
-      if (this.moving.right) this.player.move(2);
+      if (this.moving.up) this.player.move(0, -4);
+      if (this.moving.left) this.player.move(-4);
+      if (this.moving.down) this.player.move(0, 4);
+      if (this.moving.right) this.player.move(4);
       this.player.inBound(this.size);
     }
   }, {
@@ -216,8 +246,7 @@ var Game = /*#__PURE__*/function () {
         if (_this4.player.isTouching(thing)) {
           if (thing instanceof _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"]) {
             console.log('tp');
-          } else {
-            console.log(thing);
+          } else {// console.log(thing)
           }
         }
       });
@@ -456,7 +485,7 @@ var peopleMaker = /*#__PURE__*/function () {
   }, {
     key: "randomX",
     value: function randomX() {
-      return Math.floor(Math.random() * (this.width - 30) + 30);
+      return Math.floor(Math.random() * (this.width - 40) + 20);
     }
   }, {
     key: "makeRandomPerson",

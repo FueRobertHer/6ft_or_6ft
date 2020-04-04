@@ -12,6 +12,8 @@ export default class Game {
       width: canvas.width,
       height: canvas.height
     }
+    this.interval = 1000
+
     this.peopleMaker = new PeopleMaker(this.size)
     
     this.things = [this.peopleMaker.makeRandomPerson()]
@@ -23,8 +25,19 @@ export default class Game {
       down: false,
       right: false
     }
+
     this.play()
     this.initListeners()
+    this.autoMakePeople()
+    setInterval(this.increaseTraffic.bind(this), 5000)
+  }
+
+  increaseTraffic() {
+    if(this.interval > 100) {
+      this.interval -= 100
+    } else if (this.interval > 0) {
+      this.interval -= 10
+    }
   }
 
   initListeners() {
@@ -70,15 +83,30 @@ export default class Game {
     })
   }
 
+  makeRandomPeople() {
+    let person = this.peopleMaker.makeRandomPerson()
+    this.things.push(person)
+  }
+
+  autoMakePeople() {
+    let time = this.randomInterval()
+    setTimeout(this.makeRandomPeople.bind(this), time)
+    setTimeout(this.autoMakePeople.bind(this), time)
+  }
+
+  randomInterval() {
+    return Math.floor(Math.random() * this.interval)
+  }
+
   removeNotInBound() {
     this.things = this.things.filter(thing => (thing.inBound(this.size)))
   }
 
   movePlayer() {
-    if (this.moving.up) this.player.move(0, -2)
-    if (this.moving.left) this.player.move(-2)
-    if (this.moving.down) this.player.move(0, 2)
-    if (this.moving.right) this.player.move(2)
+    if (this.moving.up) this.player.move(0, -4)
+    if (this.moving.left) this.player.move(-4)
+    if (this.moving.down) this.player.move(0, 4)
+    if (this.moving.right) this.player.move(4)
     this.player.inBound(this.size)
   }
 
@@ -88,7 +116,7 @@ export default class Game {
         if (thing instanceof ToiletPaper) {
           console.log('tp')
         } else {
-          console.log(thing)
+          // console.log(thing)
         }
       }
     })
