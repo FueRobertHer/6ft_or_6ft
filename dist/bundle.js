@@ -180,18 +180,12 @@ var Game = /*#__PURE__*/function () {
         if (_this2.player.hasTP()) {
           var pos = _this2.player.pos();
 
-          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"](pos.x, pos.y);
-
           var mPos = _this2.getMousePos(_this2.canvas, e);
 
-          var x = mPos.x - pos.x;
-          var y = mPos.y - pos.y;
-          var angle = Math.asin(x / Math.hypot(x, y));
-          var xVel = Math.sin(angle);
-          var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
-          tp.xVel += xVel * 5;
-          tp.yVel += yVel * 4;
-          y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1;
+          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"](pos.x, pos.y);
+          var vel = tp.getVelTo(mPos);
+          tp.xVel += vel.xVel * 5;
+          tp.yVel += vel.yVel * 4;
 
           _this2.things.push(tp);
 
@@ -362,6 +356,20 @@ var MovingCicle = /*#__PURE__*/function () {
       return c < this.radius + other.radius;
     }
   }, {
+    key: "getVelTo",
+    value: function getVelTo(pos2) {
+      var pos1 = this.pos();
+      var x = pos2.x - pos1.x;
+      var y = pos2.y - pos1.y;
+      var angle = Math.asin(x / Math.hypot(x, y));
+      var xVel = Math.sin(angle);
+      var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
+      return {
+        xVel: xVel,
+        yVel: yVel
+      };
+    }
+  }, {
     key: "move",
     value: function move() {
       var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
@@ -413,6 +421,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function _createSuper(Derived) { return function () { var Super = _getPrototypeOf(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
@@ -446,6 +458,16 @@ var People = /*#__PURE__*/function (_MovingCircle) {
     _this.color = 'red';
     return _this;
   }
+
+  _createClass(People, [{
+    key: "seesTP",
+    value: function seesTP(tp) {
+      var a = tp.x - this.x;
+      var b = tp.y - this.y;
+      var c = Math.hypot(a, b);
+      return c < this.radius + tp.visRadius;
+    }
+  }]);
 
   return People;
 }(_movingCircle__WEBPACK_IMPORTED_MODULE_0__["default"]);
@@ -640,7 +662,7 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'blue';
-    _this.attractRadius = radius * 10;
+    _this.visRadius = radius * 10;
     _this.hp = 100;
     _this.land = _this.land.bind(_assertThisInitialized(_this));
 

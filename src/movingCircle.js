@@ -31,6 +31,19 @@ export default class MovingCicle {
     return c < this.radius + other.radius
   }
 
+    getVelTo(pos2) {
+      let pos1 = this.pos()
+      let x = pos2.x - pos1.x
+      let y = pos2.y - pos1.y
+      let angle = Math.asin(x / Math.hypot(x, y))
+      let xVel = Math.sin(angle)
+      let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
+      return {
+        xVel: xVel,
+        yVel: yVel
+      }
+    }
+
   move(x = 0, y = 0) {
     this.xVel += x
     this.yVel += y

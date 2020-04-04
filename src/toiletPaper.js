@@ -5,7 +5,7 @@ export default class ToiletPaper extends MovingCirlce {
     super(x, y, radius)
 
     this.color = 'blue'
-    this.attractRadius = radius * 10
+    this.visRadius = radius * 10
 
     this.hp = 100
 

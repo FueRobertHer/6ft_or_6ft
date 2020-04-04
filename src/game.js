@@ -64,16 +64,12 @@ export default class Game {
     document.addEventListener('click', (e) => {
       if (this.player.hasTP()) {
         let pos = this.player.pos()
-        let tp = new ToiletPaper(pos.x, pos.y)
         let mPos = this.getMousePos(this.canvas, e)
-        let x = mPos.x - pos.x
-        let y = mPos.y - pos.y
-        let angle = Math.asin(x / Math.hypot(x,y))
-        let xVel = Math.sin(angle)
-        let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
-        tp.xVel += xVel * 5
-        tp.yVel += yVel * 4
-        y > 0 ? tp.yVel += Math.cos(angle) : tp.yVel += Math.cos(angle) * -1
+
+        let tp = new ToiletPaper(pos.x, pos.y)
+        let vel = tp.getVelTo(mPos)
+        tp.xVel += vel.xVel * 5
+        tp.yVel += vel.yVel * 4
         this.things.push(tp)
         this.player.tpAmmo--
       } else {

@@ -6,6 +6,13 @@ export default class People extends MovingCircle {
 
       this.yVel = 5
       this.color = 'red'
+  }
 
+  seesTP(tp) {
+    let a = tp.x - this.x
+    let b = tp.y - this.y
+    let c = Math.hypot(a, b)
+
+    return c < this.radius + tp.visRadius
   }
 }
