@@ -380,9 +380,9 @@ var MovingCicle = /*#__PURE__*/function () {
     this.x = x;
     this.y = y;
     this.radius = radius;
+    this.friction = .95;
     this.xVel = 0;
     this.yVel = 0;
-    this.friction = .98;
     this.color = 'black';
   }
 
@@ -397,8 +397,8 @@ var MovingCicle = /*#__PURE__*/function () {
   }, {
     key: "inBound",
     value: function inBound(size) {
-      if (this.x + this.radius < 0 || this.x - this.radius > size.width) return false;
-      if (this.y + this.radius < -20 || this.y - this.radius > size.height) return false;
+      if (this.x + this.radius < -100 || this.x - this.radius > size.width + 100) return false;
+      if (this.y + this.radius < -100 || this.y - this.radius > size.height + 100) return false;
       return true;
     }
   }, {
@@ -439,12 +439,12 @@ var MovingCicle = /*#__PURE__*/function () {
       this.xVel += vel.xVel * speed;
       this.yVel += vel.yVel * speed;
       this.xVel *= this.friction;
-      this.yVel *= this.friction.isTouching;
+      this.yVel *= this.friction;
     }
   }, {
     key: "moveAway",
     value: function moveAway(pos) {
-      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .1;
+      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .07;
       var vel = this.getVelTo(pos);
       this.xVel -= vel.xVel * speed;
       this.yVel -= vel.yVel * speed;
@@ -536,7 +536,9 @@ var People = /*#__PURE__*/function (_MovingCircle) {
     _classCallCheck(this, People);
 
     _this = _super.call(this, x, y, radius);
-    _this.color = 'red'; // this.randomMove()
+    _this.color = 'red';
+
+    _this.randomMove();
 
     return _this;
   }
@@ -653,7 +655,8 @@ var peopleMaker = /*#__PURE__*/function () {
     key: "makeRandomPerson",
     value: function makeRandomPerson() {
       var x = this.randomX();
-      var radius = this.randomPeopleSize();
+      var radius = 10; // let radius = this.randomPeopleSize()
+
       return new _people__WEBPACK_IMPORTED_MODULE_0__["default"](x, -20, radius);
     }
   }]);
@@ -713,7 +716,7 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
     _classCallCheck(this, Player);
 
     _this = _super.call(this, x, y, radius);
-    _this.color = 'turquoise';
+    _this.color = 'yellow';
     _this.tpAmmo = 50;
     _this.food = 50;
     return _this;
@@ -798,7 +801,7 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'blue';
-    _this.visRadius = radius * 35;
+    _this.visRadius = radius * 25;
     _this.hp = 100;
     _this.moving = true;
     _this.land = _this.land.bind(_assertThisInitialized(_this));

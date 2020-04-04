@@ -3,11 +3,10 @@ export default class MovingCicle {
     this.x = x
     this.y = y
     this.radius = radius
+    this.friction = .95
 
     this.xVel = 0
     this.yVel = 0
-
-    this.friction = .98
 
     this.color = 'black'
   }
@@ -20,8 +19,8 @@ export default class MovingCicle {
   }
 
   inBound(size) {
-    if (this.x + this.radius < 0 || this.x - this.radius > size.width) return false
-    if (this.y + this.radius < -20 || this.y - this.radius > size.height) return false
+    if (this.x + this.radius < -100 || this.x - this.radius > size.width + 100) return false
+    if (this.y + this.radius < -100 || this.y - this.radius > size.height + 100) return false
     return true
   }
 
@@ -59,10 +58,10 @@ export default class MovingCicle {
     this.yVel += vel.yVel * speed
 
     this.xVel *= this.friction
-    this.yVel *= this.friction.isTouching
+    this.yVel *= this.friction
   }
 
-  moveAway(pos, speed = .1) {
+  moveAway(pos, speed = .07) {
     let vel = this.getVelTo(pos)
     this.xVel -= vel.xVel * speed
     this.yVel -= vel.yVel * speed

@@ -16,7 +16,8 @@ export default class peopleMaker {
 
   makeRandomPerson() {
     let x = this.randomX()
-    let radius = this.randomPeopleSize()
+    let radius = 10
+    // let radius = this.randomPeopleSize()
     return new People(x, -20, radius)
   }
 }
