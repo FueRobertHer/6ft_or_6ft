@@ -103,10 +103,14 @@ export default class Game {
   }
 
   movePlayer() {
-    if (this.moving.up) this.player.move(0, -4)
-    if (this.moving.left) this.player.move(-4)
-    if (this.moving.down) this.player.move(0, 4)
-    if (this.moving.right) this.player.move(4)
+    if (this.moving.up && this.moving.left) this.player.move(1, 1)
+    if (this.moving.up && this.moving.right) this.player.move(-1, 1)
+    if (this.moving.down && this.moving.left) this.player.move(1, -1)
+    if (this.moving.down && this.moving.right) this.player.move(-1, -1)
+    if (this.moving.up) this.player.move(0, -3)
+    if (this.moving.down) this.player.move(0, 3)
+    if (this.moving.left) this.player.move(-3)
+    if (this.moving.right) this.player.move(3)
     this.player.inBound(this.size)
   }
 
