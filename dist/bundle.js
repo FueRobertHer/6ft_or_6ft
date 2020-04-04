@@ -123,8 +123,12 @@ var Game = /*#__PURE__*/function () {
       height: canvas.height
     };
     this.interval = 1000;
+    this.gameOver = false;
     this.peopleMaker = new _peopleMaker__WEBPACK_IMPORTED_MODULE_2__["default"](this.size);
-    this.things = [this.peopleMaker.makeRandomPerson()];
+    this.test = this.peopleMaker.makeRandomPerson();
+    this.people = [this.test];
+    this.stuff = [];
+    console.log(this.test);
     this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .8, 10);
     this.moving = {
       up: false,
@@ -183,11 +187,9 @@ var Game = /*#__PURE__*/function () {
           var mPos = _this2.getMousePos(_this2.canvas, e);
 
           var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"](pos.x, pos.y);
-          var vel = tp.getVelTo(mPos);
-          tp.xVel += vel.xVel * 5;
-          tp.yVel += vel.yVel * 4;
+          tp.moveTo(mPos, 15);
 
-          _this2.things.push(tp);
+          _this2.stuff.push(tp);
 
           _this2.player.tpAmmo--;
         } else {
@@ -199,7 +201,7 @@ var Game = /*#__PURE__*/function () {
     key: "makeRandomPeople",
     value: function makeRandomPeople() {
       var person = this.peopleMaker.makeRandomPerson();
-      this.things.push(person);
+      this.people.push(person);
     }
   }, {
     key: "autoMakePeople",
@@ -214,12 +216,27 @@ var Game = /*#__PURE__*/function () {
       return Math.floor(Math.random() * this.interval);
     }
   }, {
-    key: "removeNotInBound",
-    value: function removeNotInBound() {
+    key: "removeNotInPlay",
+    value: function removeNotInPlay() {
+      this.removePeople();
+      this.removeStuff();
+    }
+  }, {
+    key: "removePeople",
+    value: function removePeople() {
       var _this3 = this;
 
-      this.things = this.things.filter(function (thing) {
-        return thing.inBound(_this3.size);
+      this.people = this.people.filter(function (person) {
+        return person.inBound(_this3.size);
+      });
+    }
+  }, {
+    key: "removeStuff",
+    value: function removeStuff() {
+      var _this4 = this;
+
+      this.stuff = this.stuff.filter(function (item) {
+        return item.inBound(_this4.size) && item.hp > 0;
       });
     }
   }, {
@@ -236,16 +253,13 @@ var Game = /*#__PURE__*/function () {
       this.player.inBound(this.size);
     }
   }, {
-    key: "playerIsTouchingThings",
-    value: function playerIsTouchingThings() {
-      var _this4 = this;
+    key: "playerIsTouchingPeople",
+    value: function playerIsTouchingPeople() {
+      var _this5 = this;
 
-      this.things.forEach(function (thing) {
-        if (_this4.player.isTouching(thing)) {
-          if (thing instanceof _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"]) {
-            console.log('tp');
-          } else {// console.log(thing)
-          }
+      this.people.forEach(function (person) {
+        if (_this5.player.isTouching(person)) {
+          _this5.gameOver = true;
         }
       });
     }
@@ -259,18 +273,62 @@ var Game = /*#__PURE__*/function () {
       };
     }
   }, {
+    key: "movePeople",
+    value: function movePeople() {
+      this.socialDistance();
+      this.movePeopleToTP();
+    }
+  }, {
+    key: "socialDistance",
+    value: function socialDistance() {
+      var _this6 = this;
+
+      this.people.forEach(function (person) {
+        var other = person.findClosestPerson(_this6.people);
+
+        if (other && person.getDistanceTo(other.pos()) < 30) {
+          person.moveAway(other.pos());
+        }
+      });
+    }
+  }, {
+    key: "movePeopleToTP",
+    value: function movePeopleToTP() {
+      var _this7 = this;
+
+      this.people.forEach(function (person) {
+        var tp = person.findClosestTP(_this7.stuff);
+
+        if (tp) {
+          person.moveTo(tp.pos());
+
+          if (person.isTouching(tp)) {
+            tp.hp -= 1;
+            person.xVel = 0;
+            person.yVel = 0;
+          }
+        }
+      });
+    }
+  }, {
     key: "animate",
     value: function animate() {
-      var _this5 = this;
+      var _this8 = this;
 
-      this.ctx.clearRect(0, 0, this.size.width, this.size.height);
-      this.movePlayer();
-      this.playerIsTouchingThings();
-      this.removeNotInBound();
-      this.things.forEach(function (thing) {
-        return thing.animate(_this5.ctx);
-      });
-      this.player.animate(this.ctx);
+      if (!this.gameOver) {
+        this.ctx.clearRect(0, 0, this.size.width, this.size.height);
+        this.movePlayer();
+        this.playerIsTouchingPeople();
+        this.removeNotInPlay();
+        this.movePeople();
+        this.people.forEach(function (person) {
+          return person.animate(_this8.ctx);
+        });
+        this.stuff.forEach(function (thing) {
+          return thing.animate(_this8.ctx);
+        });
+        this.player.animate(this.ctx);
+      }
     }
   }, {
     key: "play",
@@ -356,11 +414,19 @@ var MovingCicle = /*#__PURE__*/function () {
       return c < this.radius + other.radius;
     }
   }, {
+    key: "getDistanceTo",
+    value: function getDistanceTo(pos) {
+      var ownPos = this.pos();
+      var x = pos.x - ownPos.x;
+      var y = pos.y - ownPos.y;
+      return Math.hypot(x, y);
+    }
+  }, {
     key: "getVelTo",
-    value: function getVelTo(pos2) {
-      var pos1 = this.pos();
-      var x = pos2.x - pos1.x;
-      var y = pos2.y - pos1.y;
+    value: function getVelTo(pos) {
+      var ownPos = this.pos();
+      var x = pos.x - ownPos.x;
+      var y = pos.y - ownPos.y;
       var angle = Math.asin(x / Math.hypot(x, y));
       var xVel = Math.sin(angle);
       var yVel = y > 0 ? Math.cos(angle) : Math.cos(angle) * -1;
@@ -368,6 +434,23 @@ var MovingCicle = /*#__PURE__*/function () {
         xVel: xVel,
         yVel: yVel
       };
+    }
+  }, {
+    key: "moveTo",
+    value: function moveTo(pos) {
+      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .1;
+      var vel = this.getVelTo(pos);
+      this.xVel += vel.xVel * speed;
+      this.yVel += vel.yVel * speed;
+    }
+  }, {
+    key: "moveAway",
+    value: function moveAway(pos) {
+      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .07;
+      var vel = this.getVelTo(pos);
+      this.xVel -= vel.xVel * speed;
+      this.yVel -= vel.yVel * speed;
+      console.log(this.getDistanceTo(pos));
     }
   }, {
     key: "move",
@@ -382,6 +465,9 @@ var MovingCicle = /*#__PURE__*/function () {
     value: function update() {
       this.x += this.xVel;
       this.y += this.yVel;
+      this.y += 1;
+      this.xVel *= .95;
+      this.yVel *= .95;
     }
   }, {
     key: "draw",
@@ -454,7 +540,6 @@ var People = /*#__PURE__*/function (_MovingCircle) {
     _classCallCheck(this, People);
 
     _this = _super.call(this, x, y, radius);
-    _this.yVel = 5;
     _this.color = 'red';
     return _this;
   }
@@ -466,6 +551,45 @@ var People = /*#__PURE__*/function (_MovingCircle) {
       var b = tp.y - this.y;
       var c = Math.hypot(a, b);
       return c < this.radius + tp.visRadius;
+    }
+  }, {
+    key: "randomDirection",
+    value: function randomDirection() {}
+  }, {
+    key: "findClosestPerson",
+    value: function findClosestPerson(people) {
+      var _this2 = this;
+
+      var closest = null;
+      people.forEach(function (person) {
+        if (_this2 !== person) {
+          if (closest === null) closest = person;
+
+          if (_this2.getDistanceTo(person.pos()) < _this2.getDistanceTo(closest.pos())) {
+            closest = person;
+          }
+        }
+      });
+      return closest;
+    }
+  }, {
+    key: "findClosestTP",
+    value: function findClosestTP(list) {
+      var _this3 = this;
+
+      var closest = null;
+      list.forEach(function (tp) {
+        if (!tp.moving) {
+          if (_this3.seesTP(tp)) {
+            if (closest === null) closest = tp;
+
+            if (_this3.getDistanceTo(tp) < _this3.getDistanceTo(closest)) {
+              closest = tp;
+            }
+          }
+        }
+      });
+      return closest;
     }
   }]);
 
@@ -578,7 +702,7 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'yellow';
-    _this.tpAmmo = 5;
+    _this.tpAmmo = 50;
     _this.food = 50;
     return _this;
   }
@@ -662,12 +786,16 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'blue';
-    _this.visRadius = radius * 10;
+    _this.visRadius = radius * 25;
     _this.hp = 100;
+    _this.moving = true;
     _this.land = _this.land.bind(_assertThisInitialized(_this));
 
     _this.land();
 
+    setTimeout(function () {
+      _this.moving = false;
+    }, 150);
     return _this;
   }
 
@@ -681,6 +809,15 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
     value: function resetVel() {
       this.xVel = 0;
       this.yVel = 0;
+    }
+  }, {
+    key: "update",
+    value: function update() {
+      this.x += this.xVel;
+      this.y += this.yVel;
+      this.y += .5;
+      this.xVel *= .9;
+      this.yVel *= .9;
     }
   }]);
 

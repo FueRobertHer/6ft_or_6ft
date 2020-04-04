@@ -4,7 +4,6 @@ export default class People extends MovingCircle {
   constructor(x, y, radius = 10) {
       super(x, y, radius)
 
-      this.yVel = 5
       this.color = 'red'
   }
 
@@ -15,4 +14,39 @@ export default class People extends MovingCircle {
 
     return c < this.radius + tp.visRadius
   }
+
+  randomDirection() {
+    
+  }
+
+  findClosestPerson(people) {
+    let closest = null
+    people.forEach(person => {
+      if (this !== person) {
+        if (closest === null) closest = person
+  
+        if (this.getDistanceTo(person.pos()) < this.getDistanceTo(closest.pos())) {
+          closest = person
+        }
+      }
+    })
+    return closest
+  }
+
+  findClosestTP(list) {
+    let closest = null
+    list.forEach(tp => {
+      if (!tp.moving) {
+        if (this.seesTP(tp)) {
+          if (closest === null) closest = tp
+  
+          if (this.getDistanceTo(tp) < this.getDistanceTo(closest)) {
+            closest = tp
+          }
+        }
+      }
+    })
+    return closest
+  }
+
 }

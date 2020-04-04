@@ -31,18 +31,38 @@ export default class MovingCicle {
     return c < this.radius + other.radius
   }
 
-    getVelTo(pos2) {
-      let pos1 = this.pos()
-      let x = pos2.x - pos1.x
-      let y = pos2.y - pos1.y
-      let angle = Math.asin(x / Math.hypot(x, y))
-      let xVel = Math.sin(angle)
-      let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
-      return {
-        xVel: xVel,
-        yVel: yVel
-      }
+  getDistanceTo(pos) {
+    let ownPos = this.pos()
+    let x = pos.x - ownPos.x
+    let y = pos.y - ownPos.y
+    return Math.hypot(x,y)
+  }
+
+  getVelTo(pos) {
+    let ownPos = this.pos()
+    let x = pos.x - ownPos.x
+    let y = pos.y - ownPos.y
+    let angle = Math.asin(x / Math.hypot(x, y))
+    let xVel = Math.sin(angle)
+    let yVel = (y > 0 ? Math.cos(angle) : Math.cos(angle) * -1)
+    return {
+      xVel: xVel,
+      yVel: yVel
     }
+  }
+
+  moveTo(pos, speed = .1) {
+    let vel = this.getVelTo(pos)
+    this.xVel += vel.xVel * speed
+    this.yVel += vel.yVel * speed
+  }
+
+  moveAway(pos, speed = .07) {
+    let vel = this.getVelTo(pos)
+    this.xVel -= vel.xVel * speed
+    this.yVel -= vel.yVel * speed
+    console.log(this.getDistanceTo(pos))
+  }
 
   move(x = 0, y = 0) {
     this.xVel += x
@@ -52,8 +72,10 @@ export default class MovingCicle {
   update() {
     this.x += this.xVel
     this.y += this.yVel
+    this.y += 1
 
- 
+    this.xVel *= .95
+    this.yVel *= .95
   }
 
   draw(ctx) {

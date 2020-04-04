@@ -13,10 +13,16 @@ export default class Game {
       height: canvas.height
     }
     this.interval = 1000
+    this.gameOver = false
 
     this.peopleMaker = new PeopleMaker(this.size)
     
-    this.things = [this.peopleMaker.makeRandomPerson()]
+    this.test = this.peopleMaker.makeRandomPerson()
+
+    this.people = [this.test]
+    this.stuff = []
+
+    console.log(this.test)
 
     this.player = new Player(this.size.width*.5, this.size.height*.8, 10)
     this.moving = {
@@ -67,10 +73,8 @@ export default class Game {
         let mPos = this.getMousePos(this.canvas, e)
 
         let tp = new ToiletPaper(pos.x, pos.y)
-        let vel = tp.getVelTo(mPos)
-        tp.xVel += vel.xVel * 5
-        tp.yVel += vel.yVel * 4
-        this.things.push(tp)
+        tp.moveTo(mPos, 15)
+        this.stuff.push(tp)
         this.player.tpAmmo--
       } else {
         console.log('need ammo')
@@ -81,7 +85,7 @@ export default class Game {
 
   makeRandomPeople() {
     let person = this.peopleMaker.makeRandomPerson()
-    this.things.push(person)
+    this.people.push(person)
   }
 
   autoMakePeople() {
@@ -94,8 +98,22 @@ export default class Game {
     return Math.floor(Math.random() * this.interval)
   }
 
-  removeNotInBound() {
-    this.things = this.things.filter(thing => (thing.inBound(this.size)))
+  removeNotInPlay() {
+    this.removePeople()
+    this.removeStuff()
+  }
+
+  removePeople() {
+    this.people = this.people.filter(person => (
+      person.inBound(this.size)
+      ))
+    
+  }
+
+  removeStuff() {
+    this.stuff = this.stuff.filter(item => (
+      item.inBound(this.size) && item.hp > 0
+      ))
   }
 
   movePlayer() {
@@ -110,14 +128,10 @@ export default class Game {
     this.player.inBound(this.size)
   }
 
-  playerIsTouchingThings() {
-    this.things.forEach(thing => {
-      if (this.player.isTouching(thing)) {
-        if (thing instanceof ToiletPaper) {
-          console.log('tp')
-        } else {
-          // console.log(thing)
-        }
+  playerIsTouchingPeople() {
+    this.people.forEach(person => {
+      if (this.player.isTouching(person)) {
+        this.gameOver = true
       }
     })
   }
@@ -130,14 +144,46 @@ export default class Game {
     }
   }
 
+  movePeople() {
+    this.socialDistance()
+    this.movePeopleToTP()
+  }
+
+  socialDistance() {
+    this.people.forEach(person => {
+      const other = person.findClosestPerson(this.people)
+      if (other && person.getDistanceTo(other.pos()) < 30) {
+        person.moveAway(other.pos())
+      }
+    })
+  }
+
+  movePeopleToTP() {
+    this.people.forEach(person => {
+      const tp = person.findClosestTP(this.stuff)
+      if (tp) {
+        person.moveTo(tp.pos())
+        if (person.isTouching(tp)) {
+          tp.hp -= 1
+          person.xVel = 0
+          person.yVel = 0
+        }
+      }
+
+    })
+  }
+
   animate() {
-    this.ctx.clearRect(0, 0, this.size.width, this.size.height)
-    this.movePlayer()
-    this.playerIsTouchingThings()
-    this.removeNotInBound()
-    this.things.forEach(thing => (thing.animate(this.ctx)))
-    this.player.animate(this.ctx)
-    
+    if (!this.gameOver) {
+      this.ctx.clearRect(0, 0, this.size.width, this.size.height)
+      this.movePlayer()
+      this.playerIsTouchingPeople()
+      this.removeNotInPlay()
+      this.movePeople()
+      this.people.forEach(person => (person.animate(this.ctx)))
+      this.stuff.forEach(thing => (thing.animate(this.ctx)))
+      this.player.animate(this.ctx)
+    }
   }
 
   play() {
@@ -145,4 +191,4 @@ export default class Game {
     requestAnimationFrame(this.play.bind(this))
   }
 
-    }
+}

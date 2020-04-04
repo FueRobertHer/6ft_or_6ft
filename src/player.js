@@ -5,7 +5,7 @@ export default class Player extends MovingCircle {
     super(x, y, radius)
     
     this.color = 'yellow'
-    this.tpAmmo = 5
+    this.tpAmmo = 50
     this.food = 50
   }
 
