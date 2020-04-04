@@ -5,7 +5,7 @@ export default class People extends MovingCircle {
     super(x, y, radius)
 
     this.color = 'red'
-    this.randomMove()
+    // this.randomMove()
   }
 
   seesTP(tp) {

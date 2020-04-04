@@ -97,16 +97,13 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Game; });
 /* harmony import */ var _player__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./player */ "./src/player.js");
-/* harmony import */ var _people__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./people */ "./src/people.js");
-/* harmony import */ var _peopleMaker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./peopleMaker */ "./src/peopleMaker.js");
-/* harmony import */ var _toiletPaper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./toiletPaper */ "./src/toiletPaper.js");
+/* harmony import */ var _peopleMaker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./peopleMaker */ "./src/peopleMaker.js");
+/* harmony import */ var _toiletPaper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./toiletPaper */ "./src/toiletPaper.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-// import MovingCircle from './movingCircle'
 
 
 
@@ -122,9 +119,9 @@ var Game = /*#__PURE__*/function () {
       width: canvas.width,
       height: canvas.height
     };
-    this.interval = 1000;
+    this.interval = 1500;
     this.gameOver = false;
-    this.peopleMaker = new _peopleMaker__WEBPACK_IMPORTED_MODULE_2__["default"](this.size);
+    this.peopleMaker = new _peopleMaker__WEBPACK_IMPORTED_MODULE_1__["default"](this.size);
     this.people = [];
     this.stuff = [];
     this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .8, 10);
@@ -184,7 +181,7 @@ var Game = /*#__PURE__*/function () {
 
           var mPos = _this2.getMousePos(_this2.canvas, e);
 
-          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_3__["default"](pos.x, pos.y);
+          var tp = new _toiletPaper__WEBPACK_IMPORTED_MODULE_2__["default"](pos.x, pos.y);
           tp.moveTo(mPos, 15);
 
           _this2.stuff.push(tp);
@@ -539,9 +536,7 @@ var People = /*#__PURE__*/function (_MovingCircle) {
     _classCallCheck(this, People);
 
     _this = _super.call(this, x, y, radius);
-    _this.color = 'red';
-
-    _this.randomMove();
+    _this.color = 'red'; // this.randomMove()
 
     return _this;
   }

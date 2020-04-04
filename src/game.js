@@ -1,6 +1,4 @@
-// import MovingCircle from './movingCircle'
 import Player from './player'
-import People from './people'
 import PeopleMaker from './peopleMaker'
 import ToiletPaper from './toiletPaper'
 
@@ -12,7 +10,7 @@ export default class Game {
       width: canvas.width,
       height: canvas.height
     }
-    this.interval = 1000
+    this.interval = 1500
     this.gameOver = false
 
     this.peopleMaker = new PeopleMaker(this.size)
