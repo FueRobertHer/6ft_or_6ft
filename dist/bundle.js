@@ -716,7 +716,7 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
     _classCallCheck(this, Player);
 
     _this = _super.call(this, x, y, radius);
-    _this.color = 'yellow';
+    _this.color = 'turquoise';
     _this.tpAmmo = 50;
     _this.food = 50;
     return _this;
