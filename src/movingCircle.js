@@ -7,6 +7,8 @@ export default class MovingCicle {
     this.xVel = 0
     this.yVel = 0
 
+    this.friction = .98
+
     this.color = 'black'
   }
 
@@ -55,13 +57,15 @@ export default class MovingCicle {
     let vel = this.getVelTo(pos)
     this.xVel += vel.xVel * speed
     this.yVel += vel.yVel * speed
+
+    this.xVel *= this.friction
+    this.yVel *= this.friction.isTouching
   }
 
-  moveAway(pos, speed = .07) {
+  moveAway(pos, speed = .1) {
     let vel = this.getVelTo(pos)
     this.xVel -= vel.xVel * speed
     this.yVel -= vel.yVel * speed
-    console.log(this.getDistanceTo(pos))
   }
 
   move(x = 0, y = 0) {
@@ -74,8 +78,8 @@ export default class MovingCicle {
     this.y += this.yVel
     this.y += 1
 
-    this.xVel *= .95
-    this.yVel *= .95
+    // this.xVel *= this.friction
+    // this.yVel *= this.friction
   }
 
   draw(ctx) {

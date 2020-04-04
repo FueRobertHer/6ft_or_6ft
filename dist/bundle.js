@@ -125,10 +125,8 @@ var Game = /*#__PURE__*/function () {
     this.interval = 1000;
     this.gameOver = false;
     this.peopleMaker = new _peopleMaker__WEBPACK_IMPORTED_MODULE_2__["default"](this.size);
-    this.test = this.peopleMaker.makeRandomPerson();
-    this.people = [this.test];
+    this.people = [];
     this.stuff = [];
-    console.log(this.test);
     this.player = new _player__WEBPACK_IMPORTED_MODULE_0__["default"](this.size.width * .5, this.size.height * .8, 10);
     this.moving = {
       up: false,
@@ -387,6 +385,7 @@ var MovingCicle = /*#__PURE__*/function () {
     this.radius = radius;
     this.xVel = 0;
     this.yVel = 0;
+    this.friction = .98;
     this.color = 'black';
   }
 
@@ -442,15 +441,16 @@ var MovingCicle = /*#__PURE__*/function () {
       var vel = this.getVelTo(pos);
       this.xVel += vel.xVel * speed;
       this.yVel += vel.yVel * speed;
+      this.xVel *= this.friction;
+      this.yVel *= this.friction.isTouching;
     }
   }, {
     key: "moveAway",
     value: function moveAway(pos) {
-      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .07;
+      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .1;
       var vel = this.getVelTo(pos);
       this.xVel -= vel.xVel * speed;
       this.yVel -= vel.yVel * speed;
-      console.log(this.getDistanceTo(pos));
     }
   }, {
     key: "move",
@@ -465,9 +465,8 @@ var MovingCicle = /*#__PURE__*/function () {
     value: function update() {
       this.x += this.xVel;
       this.y += this.yVel;
-      this.y += 1;
-      this.xVel *= .95;
-      this.yVel *= .95;
+      this.y += 1; // this.xVel *= this.friction
+      // this.yVel *= this.friction
     }
   }, {
     key: "draw",
@@ -541,6 +540,9 @@ var People = /*#__PURE__*/function (_MovingCircle) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'red';
+
+    _this.randomMove();
+
     return _this;
   }
 
@@ -554,7 +556,22 @@ var People = /*#__PURE__*/function (_MovingCircle) {
     }
   }, {
     key: "randomDirection",
-    value: function randomDirection() {}
+    value: function randomDirection() {
+      var ownPos = this.pos();
+      var x = ownPos.x += Math.random() * 100 - 50;
+      var y = ownPos.x += Math.random() * 200 - 100;
+      return {
+        x: x,
+        y: y
+      };
+    }
+  }, {
+    key: "randomMove",
+    value: function randomMove() {
+      var pos = this.randomDirection();
+      this.moveTo(pos, 1);
+      setTimeout(this.randomMove.bind(this), 1000);
+    }
   }, {
     key: "findClosestPerson",
     value: function findClosestPerson(people) {
@@ -701,7 +718,7 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
     _classCallCheck(this, Player);
 
     _this = _super.call(this, x, y, radius);
-    _this.color = 'yellow';
+    _this.color = 'turquoise';
     _this.tpAmmo = 50;
     _this.food = 50;
     return _this;
@@ -786,7 +803,7 @@ var ToiletPaper = /*#__PURE__*/function (_MovingCirlce) {
 
     _this = _super.call(this, x, y, radius);
     _this.color = 'blue';
-    _this.visRadius = radius * 25;
+    _this.visRadius = radius * 35;
     _this.hp = 100;
     _this.moving = true;
     _this.land = _this.land.bind(_assertThisInitialized(_this));

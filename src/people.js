@@ -2,9 +2,10 @@ import MovingCircle from './movingCircle'
 
 export default class People extends MovingCircle {
   constructor(x, y, radius = 10) {
-      super(x, y, radius)
+    super(x, y, radius)
 
-      this.color = 'red'
+    this.color = 'red'
+    this.randomMove()
   }
 
   seesTP(tp) {
@@ -16,7 +17,16 @@ export default class People extends MovingCircle {
   }
 
   randomDirection() {
-    
+    const ownPos = this.pos()
+    const x = ownPos.x += Math.random() * 100 - 50
+    const y = ownPos.x += Math.random() * 200 - 100
+    return {x: x, y: y}
+  }
+
+  randomMove() {
+    const pos = this.randomDirection()
+    this.moveTo(pos, 1)
+    setTimeout(this.randomMove.bind(this), 1000)
   }
 
   findClosestPerson(people) {

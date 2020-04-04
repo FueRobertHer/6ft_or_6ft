@@ -17,12 +17,8 @@ export default class Game {
 
     this.peopleMaker = new PeopleMaker(this.size)
     
-    this.test = this.peopleMaker.makeRandomPerson()
-
-    this.people = [this.test]
+    this.people = []
     this.stuff = []
-
-    console.log(this.test)
 
     this.player = new Player(this.size.width*.5, this.size.height*.8, 10)
     this.moving = {
