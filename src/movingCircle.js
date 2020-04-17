@@ -61,7 +61,7 @@ export default class MovingCicle {
     this.yVel *= this.friction
   }
 
-  moveAway(pos, speed = .07) {
+  moveAway(pos, speed = .09) {
     let vel = this.getVelTo(pos)
     this.xVel -= vel.xVel * speed
     this.yVel -= vel.yVel * speed

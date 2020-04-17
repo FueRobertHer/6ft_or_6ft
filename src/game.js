@@ -33,9 +33,9 @@ export default class Game {
   }
 
   increaseTraffic() {
-    if(this.interval > 100) {
+    if(this.interval > 500) {
       this.interval -= 100
-    } else if (this.interval > 0) {
+    } else if (this.interval > 50) {
       this.interval -= 10
     }
   }

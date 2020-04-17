@@ -140,9 +140,9 @@ var Game = /*#__PURE__*/function () {
   _createClass(Game, [{
     key: "increaseTraffic",
     value: function increaseTraffic() {
-      if (this.interval > 100) {
+      if (this.interval > 500) {
         this.interval -= 100;
-      } else if (this.interval > 0) {
+      } else if (this.interval > 50) {
         this.interval -= 10;
       }
     }
@@ -444,7 +444,7 @@ var MovingCicle = /*#__PURE__*/function () {
   }, {
     key: "moveAway",
     value: function moveAway(pos) {
-      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .07;
+      var speed = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : .09;
       var vel = this.getVelTo(pos);
       this.xVel -= vel.xVel * speed;
       this.yVel -= vel.yVel * speed;
