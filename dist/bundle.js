@@ -254,7 +254,10 @@ var Game = /*#__PURE__*/function () {
 
       this.people.forEach(function (person) {
         if (_this5.player.isTouching(person)) {
-          _this5.gameOver = true;
+          _this5.player.gotTouched();
+
+          person.moveAway(_this5.player);
+          if (_this5.player.hp <= 0) _this5.gameOver = true;
         }
       });
     }
@@ -565,6 +568,8 @@ var People = /*#__PURE__*/function (_MovingCircle) {
   }, {
     key: "randomMove",
     value: function randomMove() {
+      this.xVel *= .7;
+      this.yVel *= .7;
       var pos = this.randomDirection();
       this.moveTo(pos, 1);
       setTimeout(this.randomMove.bind(this), 1000);
@@ -718,11 +723,44 @@ var Player = /*#__PURE__*/function (_MovingCircle) {
     _this = _super.call(this, x, y, radius);
     _this.color = 'turquoise';
     _this.tpAmmo = 50;
-    _this.food = 50;
+    _this.hp = 3;
+    _this.invulnerable = false;
     return _this;
   }
 
   _createClass(Player, [{
+    key: "gotTouched",
+    value: function gotTouched() {
+      if (!this.invulnerable) {
+        this.hp--;
+        this.toggleInvulnerablity();
+        this.color = 'black';
+        setTimeout(this.toggleInvulnerablity.bind(this), 1000);
+      }
+    }
+  }, {
+    key: "toggleInvulnerablity",
+    value: function toggleInvulnerablity() {
+      switch (this.hp) {
+        case 2:
+          this.color = 'yellow';
+          break;
+
+        case 1:
+          this.color = 'orange';
+          break;
+
+        case 0:
+          this.color = 'red';
+          break;
+
+        default:
+          this.color = 'turquoise';
+      }
+
+      this.invulnerable = !this.invulnerable;
+    }
+  }, {
     key: "hasTP",
     value: function hasTP() {
       return this.tpAmmo > 0;

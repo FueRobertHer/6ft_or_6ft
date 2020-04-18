@@ -24,6 +24,8 @@ export default class People extends MovingCircle {
   }
 
   randomMove() {
+    this.xVel *= .7
+    this.yVel *= .7
     const pos = this.randomDirection()
     this.moveTo(pos, 1)
     setTimeout(this.randomMove.bind(this), 1000)

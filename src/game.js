@@ -125,7 +125,10 @@ export default class Game {
   playerIsTouchingPeople() {
     this.people.forEach(person => {
       if (this.player.isTouching(person)) {
-        this.gameOver = true
+        this.player.gotTouched()
+        person.moveAway(this.player)
+        
+        if (this.player.hp <= 0) this.gameOver = true
       }
     })
   }

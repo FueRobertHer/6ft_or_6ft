@@ -6,7 +6,34 @@ export default class Player extends MovingCircle {
     
     this.color = 'turquoise'
     this.tpAmmo = 50
-    this.food = 50
+    this.hp = 3
+    this.invulnerable = false
+  }
+
+  gotTouched() {
+    if (!this.invulnerable) {
+      this.hp--
+      this.toggleInvulnerablity()
+      this.color = 'black'
+      setTimeout(this.toggleInvulnerablity.bind(this), 1000)
+    }
+  }
+
+  toggleInvulnerablity() {
+    switch (this.hp) {
+      case 2:
+        this.color = 'yellow'
+        break
+      case 1:
+        this.color = 'orange'
+        break
+      case 0:
+        this.color = 'red'
+        break
+      default:
+        this.color = 'turquoise'
+    }
+    this.invulnerable = !this.invulnerable
   }
 
   hasTP() {
